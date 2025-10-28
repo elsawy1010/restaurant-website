@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>مطعم الحبايب | المنيو</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
 
   <style>
     :root {
@@ -35,7 +33,7 @@
       padding: 16px 0;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 1000;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
     }
 
@@ -49,30 +47,67 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
     }
 
     .nav-bar img {
       height: 60px;
-      width: auto;
       border-radius: 8px;
-      transition: transform 0.3s;
     }
 
-    .nav-bar img:hover {
-      transform: scale(1.05);
+    .nav-links {
+      display: flex;
+      gap: 20px;
     }
 
     .nav-links a {
       color: white;
       text-decoration: none;
-      margin-left: 20px;
       font-weight: 700;
-      transition: color 0.3s;
     }
 
     .nav-links a:hover {
       color: var(--accent-color);
+    }
+
+    /* زر القائمة للموبايل */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* القائمة المنسدلة */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 0;
+        background: var(--main-color);
+        flex-direction: column;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        text-align: center;
+        transition: max-height 0.4s ease;
+      }
+
+      .nav-links.open {
+        max-height: 300px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-links a {
+        padding: 14px 0;
+        display: block;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
     }
 
     h1 {
@@ -81,7 +116,6 @@
       margin: 40px 0 20px;
     }
 
-    /* شريط البحث والتصنيف */
     .topbar {
       display: flex;
       flex-wrap: wrap;
@@ -91,8 +125,7 @@
       animation: fadeIn 0.8s ease;
     }
 
-    .search,
-    select {
+    .search, select {
       padding: 12px 16px;
       border-radius: 10px;
       border: 1px solid #ccc;
@@ -102,13 +135,11 @@
       transition: border 0.3s, box-shadow 0.3s;
     }
 
-    .search:focus,
-    select:focus {
+    .search:focus, select:focus {
       border-color: var(--main-color);
       box-shadow: 0 0 8px rgba(211, 84, 0, 0.3);
     }
 
-    /* شبكة المنيو */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -163,30 +194,9 @@
       margin-top: 50px;
     }
 
-    /* حركات */
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* استجابة */
-    @media (max-width: 768px) {
-      .nav-links {
-        margin-top: 10px;
-        text-align: center;
-        width: 100%;
-      }
-
-      .nav-links a {
-        margin: 0 10px;
-      }
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
@@ -195,7 +205,8 @@
   <header>
     <div class="container nav-bar">
       <img src="https://i.ibb.co/6mRhzsr/restaurant-logo.png" alt="شعار المطعم" id="site-logo">
-      <div class="nav-links">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="nav-links" id="navLinks">
         <a href="index.html">الرئيسية</a>
         <a href="menu.html">المنيو</a>
         <a href="offers.html">العروض</a>
@@ -206,14 +217,12 @@
 
   <main class="container">
     <h1>قائمة الطعام</h1>
-
     <div class="topbar">
       <input id="search" class="search" placeholder="ابحث عن طبق أو وصف..." />
       <select id="filterCategory">
         <option value="">كل الأقسام</option>
       </select>
     </div>
-
     <div id="menuGrid" class="grid"></div>
   </main>
 
@@ -223,21 +232,30 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    const MENU_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPKa9EzOY6AzX-DPj35YSeldDQ4hRLPMBx0hclQy3f4muW1KC8zI5RLzm7sawSNy8_1LaV5hd1RFHU/pub?output=csv';
+    // قائمة منسدلة للموبايل
+    const toggleBtn = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
 
+    toggleBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+        navLinks.classList.remove('open');
+      }
+    });
+
+    // تحميل البيانات من جوجل شيت
+    const MENU_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPKa9EzOY6AzX-DPj35YSeldDQ4hRLPMBx0hclQy3f4muW1KC8zI5RLzm7sawSNy8_1LaV5hd1RFHU/pub?output=csv';
     const menuGrid = document.getElementById('menuGrid');
     const searchInput = document.getElementById('search');
     const filterCategory = document.getElementById('filterCategory');
-
     let items = [];
 
     function escapeHtml(s) {
       return String(s || '').replace(/[&<>"']/g, m => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
       }[m]));
     }
 
@@ -295,5 +313,4 @@
     filterCategory.addEventListener('change', filterAndSearch);
   </script>
 </body>
-
 </html>
