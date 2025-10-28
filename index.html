@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,6 +18,7 @@
       box-sizing: border-box;
       font-family: 'Cairo', sans-serif;
       scroll-behavior: smooth;
+      transition: all 0.3s ease;
     }
 
     body {
@@ -25,15 +27,15 @@
       color: var(--text-color);
     }
 
+    /* ===== Header ===== */
     header {
       background: var(--main-color);
       color: white;
-      padding: 14px 0;
+      padding: 12px 0;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-      transition: background 0.3s;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     }
 
     .container {
@@ -44,25 +46,31 @@
 
     .nav-bar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       flex-wrap: wrap;
     }
 
     .nav-bar img {
       height: 60px;
-      transition: transform 0.3s ease;
       border-radius: 10px;
     }
 
-    .nav-bar img:hover {
-      transform: scale(1.05);
+    .menu-toggle {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
     }
 
     .nav-links a {
       color: white;
       text-decoration: none;
-      margin: 0 15px;
       font-weight: 700;
       transition: color 0.3s;
     }
@@ -71,18 +79,18 @@
       color: var(--accent-color);
     }
 
-    /* HERO SECTION */
+    /* ===== Hero Section ===== */
     .hero {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       padding: 70px 0;
+      animation: fadeIn 1s ease;
     }
 
     .hero-text {
       flex: 1 1 400px;
-      animation: fadeInRight 1.2s ease;
     }
 
     .hero-text h1 {
@@ -105,7 +113,6 @@
       text-decoration: none;
       font-weight: 700;
       margin-left: 10px;
-      transition: all 0.3s ease;
       display: inline-block;
     }
 
@@ -120,11 +127,11 @@
       max-width: 480px;
       width: 100%;
       border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      animation: fadeInLeft 1.2s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 1.2s ease;
     }
 
-    /* ABOUT SECTION */
+    /* ===== About Section ===== */
     .about {
       text-align: center;
       padding: 80px 20px;
@@ -144,7 +151,7 @@
       font-size: 17px;
     }
 
-    /* MAP SECTION */
+    /* ===== Map Section ===== */
     .map {
       margin: 60px 0;
       animation: fadeInUp 1.2s ease;
@@ -155,10 +162,10 @@
       height: 400px;
       border: 0;
       border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
-    /* FOOTER */
+    /* ===== Footer ===== */
     footer {
       background: var(--main-color);
       color: white;
@@ -167,31 +174,61 @@
       font-size: 15px;
     }
 
-    /* RESPONSIVE */
+    /* ===== Animations ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ===== Responsive Navbar ===== */
     @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        background: var(--main-color);
+        padding: 10px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links a {
+        margin: 10px 0;
+      }
+
       .hero {
         flex-direction: column;
         text-align: center;
       }
+
       .btn-group a {
         margin: 10px 5px;
       }
-    }
-
-    /* ANIMATIONS */
-    @keyframes fadeInRight {
-      from {opacity:0; transform:translateX(40px);}
-      to {opacity:1; transform:translateX(0);}
-    }
-
-    @keyframes fadeInLeft {
-      from {opacity:0; transform:translateX(-40px);}
-      to {opacity:1; transform:translateX(0);}
-    }
-
-    @keyframes fadeInUp {
-      from {opacity:0; transform:translateY(40px);}
-      to {opacity:1; transform:translateY(0);}
     }
   </style>
 </head>
@@ -200,7 +237,8 @@
   <header>
     <div class="container nav-bar">
       <img src="https://i.ibb.co/6mRhzsr/restaurant-logo.png" alt="شعار المطعم">
-      <div class="nav-links">
+      <span class="menu-toggle" id="menuToggle">☰</span>
+      <div class="nav-links" id="navLinks">
         <a href="index.html">الرئيسية</a>
         <a href="menu.html">المنيو</a>
         <a href="offers.html">العروض</a>
@@ -240,5 +278,16 @@
   <footer>
     © 2025 مطعمنا | جميع الحقوق محفوظة
   </footer>
+
+  <script>
+    // Toggle menu on mobile
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  </script>
 </body>
+
 </html>
