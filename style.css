@@ -1,0 +1,116 @@
+/* assets/css/style.css */
+
+/* =============== متغيرات اللون والشكل =============== */
+:root{
+  --main-color: #d35400;
+  --accent-color: #f1c40f;
+  --bg-color: #fff8f0;
+  --text-color: #2c3e50;
+  --muted: #6b6b6b;
+  --container: 1200px;
+  --radius: 12px;
+  --shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+/* ======= قواعد عامة ======= */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg-color);
+  color:var(--text-color);
+  font-family: "Cairo", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.6;
+}
+
+/* ======= حاوية مركزية ======= */
+.container{
+  width:100%;
+  max-width:var(--container);
+  margin:0 auto;
+  padding:0 20px;
+}
+
+/* ======= هيدر ======= */
+.site-header{background:linear-gradient(90deg,var(--main-color), #b14900); position:sticky;top:0;z-index:100;box-shadow:0 4px 18px rgba(0,0,0,0.08)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.logo{height:60px;border-radius:8px}
+.nav{display:flex;align-items:center;gap:12px}
+.nav-links{display:flex;gap:18px;list-style:none;padding:0;margin:0}
+.nav-links a{color:#fff;text-decoration:none;font-weight:700;transition:opacity .2s}
+.nav-links a:hover{opacity:.85}
+#nav-toggle{display:none;background:transparent;border:0;color:#fff;font-size:20px}
+
+/* ======= HERO ======= */
+.hero{display:flex;gap:24px;align-items:center;padding:40px 0}
+.hero-text{flex:1}
+.hero h1{font-size:40px;margin:0 0 10px}
+.lead{color:var(--muted);font-size:18px;margin:0 0 18px}
+.cta-btns{display:flex;gap:12px}
+.btn{display:inline-block;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--main-color);color:#fff}
+.btn.ghost{background:transparent;color:var(--main-color);border:2px solid rgba(0,0,0,0.04)}
+.btn.outline{background:transparent;border:2px solid var(--main-color);color:var(--main-color)}
+.hero-media{flex:0 0 480px;display:flex;justify-content:center}
+.card-plate{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.card-plate img{display:block;width:100%;height:100%;max-height:420px;object-fit:cover}
+.badge{position:absolute;left:14px;top:14px;background:rgba(255,255,255,0.95);padding:6px 10px;border-radius:8px;font-weight:700;color:var(--main-color)}
+
+/* ======= أقسام مميزة ======= */
+.section{padding:48px 0}
+.section-title{text-align:center;font-size:28px;margin-bottom:22px;color:var(--main-color)}
+.grid{display:grid;gap:20px}
+.features{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.feature-card{background:#fff;border-radius:14px;padding:22px;box-shadow:var(--shadow);text-align:center}
+.feature-card .icon{font-size:28px;margin-bottom:10px}
+
+/* ======= عروض (كاروسيل بسيط) ======= */
+.alt-bg{background:#fffdf7}
+.offers-wrap{display:flex;align-items:center;gap:12px}
+.carousel-btn{background:transparent;border:0;font-size:28px;padding:8px;cursor:pointer;color:var(--main-color)}
+.offers-carousel{display:flex;gap:16px;overflow:hidden;scroll-behavior:smooth;padding:6px}
+.offer-card{min-width:280px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:transform .25s}
+.offer-card img{width:100%;height:170px;object-fit:cover}
+.offer-body{padding:12px;text-align:right}
+.price{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.price-old{text-decoration:line-through;color:var(--muted)}
+
+/* ======= منيو معاينة ======= */
+.menu-preview{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.menu-item{background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.menu-item img{width:100%;height:180px;object-fit:cover}
+.menu-body{padding:14px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.menu-body h4{margin:0 0 8px;color:var(--main-color)}
+.muted{color:var(--muted)}
+
+/* CTA Banner */
+.cta-banner{background:linear-gradient(90deg,var(--main-color), #b14900);color:#fff;padding:28px 0;border-radius:14px;margin:36px 20px}
+.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+
+/* FOOTER */
+.site-footer{margin-top:40px;padding:22px 0;background:transparent;color:var(--muted)}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+
+/* مركز أزرار */
+.center{text-align:center}
+
+/* ======= انيميشن reveal بسيط (يُدار عبر JS) ======= */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ======= استجابة ======= */
+@media (max-width: 900px){
+  .hero{flex-direction:column}
+  .hero-media{flex:0 0 100%}
+  .cta-inner{flex-direction:column;align-items:flex-start}
+  .offers-wrap{flex-direction:row}
+}
+@media (max-width:700px){
+  .nav-links{display:none;position:absolute;top:70px;right:20px;background:#fff;padding:12px;border-radius:10px;box-shadow:var(--shadow);flex-direction:column;min-width:160px}
+  #nav-toggle{display:block}
+  .header-inner{position:relative}
+  .cta-inner{align-items:center}
+  .footer-inner{flex-direction:column;align-items:center}
+}

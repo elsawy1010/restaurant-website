@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>العروض | مطعم الحبايب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+
+  <style>
+    :root {
+      --main-color: #000000;
+      --accent-color: #f1c40f;
+      --bg-color: #fff8f0;
+      --text-color: #2c3e50;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    header {
+      background: var(--main-color);
+      color: white;
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 20px;
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .nav-bar img {
+      height: 60px;
+      width: auto;
+      border-radius: 8px;
+      transition: transform 0.3s;
+    }
+
+    .nav-bar img:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-color);
+    }
+
+    main {
+      padding: 60px 0;
+    }
+
+    h1 {
+      color: var(--main-color);
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 32px;
+      animation: fadeInDown 1s ease;
+    }
+
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .offer-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: center;
+    }
+
+    .offer-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .offer-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .offer-card h3 {
+      color: var(--main-color);
+      margin: 12px 0 6px;
+    }
+
+    .offer-card p {
+      color: #555;
+      font-size: 15px;
+      margin: 0 10px 10px;
+    }
+
+    .price-box {
+      margin-bottom: 14px;
+    }
+
+    .price-old {
+      text-decoration: line-through;
+      color: #888;
+      margin-left: 8px;
+    }
+
+    .price-new {
+      font-weight: 700;
+      color: var(--main-color);
+      font-size: 18px;
+    }
+
+    footer {
+      background: var(--main-color);
+      color: white;
+      text-align: center;
+      padding: 16px;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        margin-top: 10px;
+      }
+
+      .nav-links a {
+        margin: 0 10px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+    }
+
+    /* ✨ Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav-bar">
+      <img src="https://i.ibb.co/6mRhzsr/restaurant-logo.png" alt="شعار المطعم">
+      <div class="nav-links">
+        <a href="index.html">الرئيسية</a>
+        <a href="menu.html">المنيو</a>
+        <a href="offers.html">العروض</a>
+        <a href="contact.html">تواصل معنا</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>عروضنا الخاصة</h1>
+    <div id="offersGrid" class="offers-grid"></div>
+  </main>
+
+  <footer>
+    © 2025 مطعمنا | جميع الحقوق محفوظة
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script>
+    const OFFERS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQEXs3PnBbi41Wlr_DjMoGTdt_Te3IIBHn5mrvPX9K06LRSTrSiNGIn-RaCnMJ9wvQmnigCtuqwm1VK/pub?output=csv';
+    const offersGrid = document.getElementById('offersGrid');
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    function renderOffers(list) {
+      offersGrid.innerHTML = '';
+      if (!list.length) {
+        offersGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666">لا توجد عروض حالياً</p>';
+        return;
+      }
+      list.forEach(o => {
+        const el = document.createElement('div');
+        el.className = 'offer-card';
+        el.innerHTML = `
+          ${o['الصورة'] || o['image'] ? `<img src="${escapeHtml(o['الصورة'] || o['image'])}" alt="${escapeHtml(o['عنوان العرض'] || o['title'] || '')}">` : ''}
+          <h3>${escapeHtml(o['عنوان العرض'] || o['title'] || '')}</h3>
+          <p>${escapeHtml(o['الوصف'] || o['description'] || '')}</p>
+          <div class="price-box">
+            ${o['السعر قبل'] || o['old_price'] ? `<span class="price-old">${escapeHtml(o['السعر قبل'] || o['old_price'])} جنيه</span>` : ''}
+            <span class="price-new">${escapeHtml(o['السعر بعد'] || o['new_price'] || o['السعر'] || o['price'] || '')} جنيه</span>
+          </div>
+        `;
+        offersGrid.appendChild(el);
+      });
+    }
+
+    Papa.parse(OFFERS_CSV, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: res => renderOffers(res.data),
+      error: err => {
+        offersGrid.innerHTML = '<p style="color:red">خطأ في جلب بيانات العروض.</p>';
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
