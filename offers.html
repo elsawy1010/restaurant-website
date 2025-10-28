@@ -2,13 +2,10 @@
 <html lang="ar" dir="rtl">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>العروض | مطعم الحبايب</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-
-
   <style>
     :root {
       --main-color: #000000;
@@ -21,6 +18,7 @@
       box-sizing: border-box;
       font-family: 'Cairo', sans-serif;
       scroll-behavior: smooth;
+      transition: all 0.3s ease;
     }
 
     body {
@@ -29,14 +27,15 @@
       color: var(--text-color);
     }
 
+    /* ===== Header ===== */
     header {
       background: var(--main-color);
       color: white;
-      padding: 16px 0;
+      padding: 12px 0;
       position: sticky;
       top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     }
 
     .container {
@@ -54,19 +53,24 @@
 
     .nav-bar img {
       height: 60px;
-      width: auto;
-      border-radius: 8px;
-      transition: transform 0.3s;
+      border-radius: 10px;
     }
 
-    .nav-bar img:hover {
-      transform: scale(1.05);
+    .menu-toggle {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
     }
 
     .nav-links a {
       color: white;
       text-decoration: none;
-      margin-left: 20px;
       font-weight: 700;
       transition: color 0.3s;
     }
@@ -75,58 +79,67 @@
       color: var(--accent-color);
     }
 
+    /* ===== Main Section ===== */
     main {
       padding: 60px 0;
+      animation: fadeInUp 1s ease;
     }
 
     h1 {
-      color: var(--main-color);
       text-align: center;
+      color: var(--main-color);
+      font-size: 34px;
       margin-bottom: 30px;
-      font-size: 32px;
       animation: fadeInDown 1s ease;
     }
 
     .offers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      animation: fadeInUp 1s ease;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 25px;
+      animation: fadeInUp 1.2s ease;
     }
 
     .offer-card {
       background: white;
       border-radius: 16px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
       text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .offer-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
     }
 
     .offer-card img {
       width: 100%;
-      height: 180px;
+      height: 200px;
       object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .offer-card:hover img {
+      transform: scale(1.05);
     }
 
     .offer-card h3 {
       color: var(--main-color);
-      margin: 12px 0 6px;
+      margin: 14px 0 6px;
+      font-size: 20px;
     }
 
     .offer-card p {
       color: #555;
       font-size: 15px;
-      margin: 0 10px 10px;
+      margin: 0 10px 15px;
+      line-height: 1.6;
     }
 
     .price-box {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .price-old {
@@ -137,7 +150,7 @@
 
     .price-new {
       font-weight: 700;
-      color: var(--main-color);
+      color: var(--accent-color);
       font-size: 18px;
     }
 
@@ -145,49 +158,45 @@
       background: var(--main-color);
       color: white;
       text-align: center;
-      padding: 16px;
-      font-size: 14px;
-      margin-top: 40px;
+      padding: 20px;
+      font-size: 15px;
+      margin-top: 60px;
     }
 
-    /* 📱 Responsive */
+    /* ===== Responsive ===== */
     @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
       .nav-links {
-        margin-top: 10px;
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        background: var(--main-color);
+        padding: 10px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .nav-links.active {
+        display: flex;
       }
 
       .nav-links a {
-        margin: 0 10px;
-      }
-
-      h1 {
-        font-size: 26px;
+        margin: 10px 0;
       }
     }
 
-    /* ✨ Animations */
+    /* ===== Animations ===== */
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from {opacity: 0; transform: translateY(40px);}
+      to {opacity: 1; transform: translateY(0);}
     }
 
     @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-40px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from {opacity: 0; transform: translateY(-40px);}
+      to {opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
@@ -196,7 +205,8 @@
   <header>
     <div class="container nav-bar">
       <img src="https://i.ibb.co/6mRhzsr/restaurant-logo.png" alt="شعار المطعم">
-      <div class="nav-links">
+      <span class="menu-toggle" id="menuToggle">☰</span>
+      <div class="nav-links" id="navLinks">
         <a href="index.html">الرئيسية</a>
         <a href="menu.html">المنيو</a>
         <a href="offers.html">العروض</a>
@@ -206,8 +216,10 @@
   </header>
 
   <main class="container">
-    <h1>عروضنا الخاصة</h1>
-    <div id="offersGrid" class="offers-grid"></div>
+    <h1>عروض مطعم الحبايب</h1>
+    <div id="offersGrid" class="offers-grid">
+      <p style="text-align:center;width:100%">جاري تحميل العروض...</p>
+    </div>
   </main>
 
   <footer>
@@ -216,6 +228,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
+    // Toggle menu on mobile
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // تحميل العروض من Google Sheets
     const OFFERS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQEXs3PnBbi41Wlr_DjMoGTdt_Te3IIBHn5mrvPX9K06LRSTrSiNGIn-RaCnMJ9wvQmnigCtuqwm1VK/pub?output=csv';
     const offersGrid = document.getElementById('offersGrid');
 
@@ -251,7 +272,7 @@
       skipEmptyLines: true,
       complete: res => renderOffers(res.data),
       error: err => {
-        offersGrid.innerHTML = '<p style="color:red">خطأ في جلب بيانات العروض.</p>';
+        offersGrid.innerHTML = '<p style="color:red;text-align:center;">خطأ في جلب بيانات العروض.</p>';
         console.error(err);
       }
     });
