@@ -69,7 +69,6 @@
       color: var(--accent-color);
     }
 
-    /* زر القائمة للموبايل */
     .menu-toggle {
       display: none;
       background: none;
@@ -219,9 +218,9 @@
   <main class="container">
     <h1>قائمة الطعام</h1>
     <div class="topbar">
-      <input id="search" class="search" placeholder="ابحث عن منتج أو فئة..." />
+      <input id="search" class="search" placeholder="ابحث عن طبق أو وصف..." />
       <select id="filterCategory">
-        <option value="">كل الفئات</option>
+        <option value="">كل الأقسام</option>
       </select>
     </div>
     <div id="menuGrid" class="grid"></div>
@@ -233,29 +232,34 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script>
-    // القائمة المنسدلة للموبايل
+    // قائمة الموبايل
     const toggleBtn = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
     toggleBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
-    document.addEventListener('click', e => {
-      if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) navLinks.classList.remove('open');
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+        navLinks.classList.remove('open');
+      }
     });
 
-    // تحميل البيانات من Google Sheets
-    const MENU_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR4BIzyaR0wvZAaS1t7rfkiF_P-C4DIfFHvwc-55oHQ1gZ9tLLSnlPbQ8oEFfzAHWPBvo965DIG61oq/pub?output=csv';
+    // رابط الشيت الأصلية القديمة
+    const MENU_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQPKa9EzOY6AzX-DPj35YSeldDQ4hRLPMBx0hclQy3f4muW1KC8zI5RLzm7sawSNy8_1LaV5hd1RFHU/pub?output=csv';
+
     const menuGrid = document.getElementById('menuGrid');
     const searchInput = document.getElementById('search');
     const filterCategory = document.getElementById('filterCategory');
     let items = [];
 
     function escapeHtml(s) {
-      return String(s || '').replace(/[&<>"']/g, m => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[m]));
+      return String(s || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
     }
 
     function render(itemsToShow) {
       menuGrid.innerHTML = '';
       if (!itemsToShow.length) {
-        menuGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666">لا يوجد عناصر حالياً</p>';
+        menuGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666">لا يوجد عناصر متاحة حالياً</p>';
         return;
       }
 
@@ -263,9 +267,9 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-          ${it['الصورة'] ? `<img src="${escapeHtml(it['الصورة'])}" alt="${escapeHtml(it['المنتج'])}">` : ''}
-          <h3>${escapeHtml(it['المنتج'] || '')}</h3>
-          <p>${escapeHtml(it['التفاصيل'] || '')}</p>
+          ${it['الصورة'] ? `<img src="${escapeHtml(it['الصورة'])}" alt="${escapeHtml(it['الاسم'])}">` : ''}
+          <h3>${escapeHtml(it['الاسم'] || '')}</h3>
+          <p>${escapeHtml(it['الوصف'] || '')}</p>
           <div class="price">${escapeHtml(it['السعر'] || '')} جنيه</div>
         `;
         menuGrid.appendChild(card);
@@ -273,16 +277,17 @@
     }
 
     function populateCategories() {
-      const cats = Array.from(new Set(items.map(i => i['الفئة'] || '').filter(Boolean)));
-      filterCategory.innerHTML = '<option value="">كل الفئات</option>' + cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      const cats = Array.from(new Set(items.map(i => i['القسم']).filter(Boolean)));
+      filterCategory.innerHTML = '<option value="">كل الأقسام</option>' +
+        cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
     }
 
     function filterAndSearch() {
       const q = searchInput.value.trim().toLowerCase();
       const cat = filterCategory.value;
       const filtered = items.filter(i => {
-        const text = ((i['المنتج'] || '') + ' ' + (i['التفاصيل'] || '') + ' ' + (i['الفئة'] || '')).toLowerCase();
-        return (cat === '' || (i['الفئة'] || '') === cat) && (!q || text.includes(q));
+        const text = ((i['الاسم'] || '') + ' ' + (i['الوصف'] || '') + ' ' + (i['القسم'] || '')).toLowerCase();
+        return (cat === '' || i['القسم'] === cat) && (!q || text.includes(q));
       });
       render(filtered);
     }
@@ -291,13 +296,13 @@
       download: true,
       header: true,
       skipEmptyLines: true,
-      complete: res => {
+      complete: function (res) {
         items = res.data;
         populateCategories();
         render(items);
       },
-      error: err => {
-        menuGrid.innerHTML = '<p style="color:red">حدث خطأ أثناء تحميل البيانات.</p>';
+      error: function (err) {
+        menuGrid.innerHTML = '<p style="color:red">حدث خطأ أثناء تحميل قائمة الطعام.</p>';
         console.error(err);
       }
     });
